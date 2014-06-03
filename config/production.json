@@ -1,0 +1,14 @@
+{
+    "user":"required", // my-ssh-user
+    "ssh_keyfile":"required", // ~/.ssh/keyfile.pem
+    "project_name":"optional", // My Project
+    "aws_access_key_id":"required",
+    "aws_secret_access_key":"required",
+    "aws_ami":"required", //ami-2339fdb
+    "aws_keypair_name":"required", //my-keypair
+    "aws_ec2_region":"required", // us-west-1
+    "aws_ec2_availability_zone":"optional", // us-west-1b
+    "aws_instance_type":"required", // m1.large
+    "aws_security_group":["required","optional","optional"], //["My_Security_Group"]
+    "aws_elb_load_balancer":"optional", //[My-load-balancer]
+}

@@ -1,0 +1,52 @@
+#!/usr/bin/python
+
+from subprocess import call
+
+BIND='<%= @bind %>'
+COUCHDB_MASTER='<%= @couchdb_master_hostname %>'
+COUCHDB_MASTERLESS='<%= @couchdb_masterless_mode %>'
+COUCHDB_ADMIN='<%= @admin_user %>'
+COUCHDB_PASSWORD='<%= @admin_password %>'
+PORT='<%= @default_port %>'
+DB='<%= @couchdb_database_1 %>'
+REPLICATE='<%= @continuous_replication %>'
+
+if COUCHDB_ADMIN == '' or COUCHDB_PASSWORD == '':
+    payload='{"source": "http://'+COUCHDB_MASTER+':'+PORT+'/'+DB+'", "continuous": true, "target":"'+DB+'"}'
+    replicate_uri='http://{0}:{1}/_replicate'.format(BIND,PORT)
+else:
+    payload='{"source": "http://'+COUCHDB_ADMIN+':'+COUCHDB_PASSWORD+'@'+COUCHDB_MASTER+':'+PORT+'/'+DB+'", "continuous": true, "target":"http://'+COUCHDB_ADMIN+':'+COUCHDB_PASSWORD+'@localhost:5984/'+DB+'"}'
+    replicate_uri='http://{0}:{1}@{2}:{3}/_replicate'.format(COUCHDB_ADMIN,COUCHDB_PASSWORD,BIND,PORT)
+
+
+args=['curl',
+    '-H',
+    "Content-Type: application/json",
+    '-X',
+    'POST',
+    replicate_uri,
+    '-d',
+    payload
+]
+
+call(args)
+
+if COUCHDB_MASTERLESS == 'true':
+    if COUCHDB_ADMIN == '' or COUCHDB_PASSWORD == '':
+        payload='{"source": "'+DB+'", "continuous": true, "target":"http://'+COUCHDB_MASTER+':'+PORT+'/'+DB+'"}'
+        replicate_uri='http://{0}:{1}/_replicate'.format(BIND,PORT)
+    else:
+        payload='{"source": "http://'+COUCHDB_ADMIN+':'+COUCHDB_PASSWORD+'@localhost:5984/'+DB+'", "continuous": true, "target":"http://'+COUCHDB_ADMIN+':'+COUCHDB_PASSWORD+'@'+COUCHDB_MASTER+':'+PORT+'/'+DB+'"}'
+        replicate_uri='http://{0}:{1}@{2}:{3}/_replicate'.format(COUCHDB_ADMIN,COUCHDB_PASSWORD,BIND,PORT)
+
+
+    args=['curl',
+        '-H',
+        "Content-Type: application/json",
+        '-X',
+        'POST',
+        replicate_uri,
+        '-d',
+        payload
+    ]
+    call(args)

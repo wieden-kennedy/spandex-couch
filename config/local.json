@@ -1,0 +1,14 @@
+{
+    "user":"",
+    "ssh_keyfile":"",
+    "project_name":"",
+    "aws_access_key_id":"",
+    "aws_secret_access_key":"",
+    "aws_ami":"",
+    "aws_keypair_name":"",
+    "aws_ec2_region":"",
+    "aws_ec2_availability_zone":"",
+    "aws_instance_type":"",
+    "aws_security_group":[""],
+    "aws_elb_load_balancer":""
+}
